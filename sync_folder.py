@@ -1,6 +1,6 @@
 # sync_folder.py - This program uses ADB to sync a folder on my android phone with a folder on my home PC. WIP
 
-# Instructions: Run python script from folder you wish to sync with. Requires ADB and related DLLs in sync folder.
+# Instructions: Run python script from folder you wish to sync with. Requires ADB and related DLLs in same directory as script.
 
 
 import os, re, subprocess, time
