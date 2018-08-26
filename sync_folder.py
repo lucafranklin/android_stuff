@@ -9,7 +9,8 @@ import os, re, subprocess, time
 
 
 # Set filepaths for android device and PC
-pcPath = '.\syncFolder'
+pcPath = '.\\syncFolder'
+os.makedirs(pcPath, exist_ok=True)
 androidPath = '/storage/emulated/0/Documents/syncFolder/'
 # Path for ADB executable.
 adbPath = '.\\adb' 
@@ -25,9 +26,9 @@ if 'No connection could be made because the target machine actively refused it' 
 	try:
 		input('Device refused connection. Check device developer settings, connect via USB, and press [Enter]')
 		print('Restarting ADB server listening on USB')
-		subprocess.run(adbPath + ' usb')
+		subprocess.run(adbPath + ' usb', shell=True)
 		time.sleep(5)
-		subprocess.run(adbPath + 'tcpip 5555')
+		subprocess.run(adbPath + 'tcpip 5555', shell=True)
 	except:
 		print('Failed to connect to device')
 elif 'connected' in str(check_connect):
@@ -36,10 +37,14 @@ else:
 	print('Unable to connect. Exiting program...')
 	exit()
 
-print(check_connect)
-
-
-
-
-
-# TODO: Sync folders.
+# Sync folders.
+try:
+	push = subprocess.run(adbPath + ' -s ' + addr + ':' + port + ' push ' + pcPath + ' ' + androidPath, shell=True)
+	print(push)
+	pull = subprocess.run(adbPath + ' -s ' + addr + ':' + port + ' pull ' + androidPath + ' ' + pcPath, shell=True)
+	print(pull)
+	print('sync completed')
+except:
+	print('Unable to sync folders.')
+	print(push)
+	print(pull)
