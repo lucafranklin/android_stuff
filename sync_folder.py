@@ -9,9 +9,9 @@ import os, re, subprocess, time
 
 
 # Set filepaths for android device and PC
-pcPath = '.\\syncFolder'
+pcPath = 'syncFolder'
 os.makedirs(pcPath, exist_ok=True)
-androidPath = '/storage/emulated/0/Documents/syncFolder/'
+androidPath, syncDir = os.path.split('/storage/emulated/0/Documents/syncFolder')
 # Path for ADB executable.
 adbPath = '.\\adb' 
 # IP address for android device.
@@ -39,9 +39,9 @@ else:
 
 # Sync folders.
 try:
-	push = subprocess.run(adbPath + ' -s ' + addr + ':' + port + ' push ' + pcPath + ' ' + androidPath, shell=True)
+	push = subprocess.run(adbPath + ' -s ' + addr + ':' + port + ' push ' + os.path.relpath(pcPath) + ' ' + androidPath, shell=True)
 	print(push)
-	pull = subprocess.run(adbPath + ' -s ' + addr + ':' + port + ' pull ' + androidPath + ' ' + pcPath, shell=True)
+	pull = subprocess.run(adbPath + ' -s ' + addr + ':' + port + ' pull ' + androidPath + '/' + syncDir + ' ' + os.curdir, shell=True)
 	print(pull)
 	print('sync completed')
 except:
